@@ -1,0 +1,264 @@
+openapi: 3.0.0
+info:
+  title: Main Service - OpenAPI 1.0
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/
+tags:
+  - name: User
+    description: User API
+  - name: Account
+    description: Account API
+paths:
+
+  /api/v1/user:
+    post:
+      operationId: createAndUpdateUser
+      summary: Create and update User
+      tags:
+        - User
+      requestBody:
+        description: User DTO
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDto'
+        required: true
+      responses:
+        '201':
+          description: Created user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+        '400':
+          description: Invalid request
+        '404':
+          description: Resource not found
+        '405':
+          description: Method is not available
+        '500':
+          description: Server error
+
+    get:
+      operationId: getAllUserByCriteria
+      summary: Get All User By Criteria
+      tags:
+        - User
+      parameters:
+        - in: query
+          name: pageable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pageable'
+        - in: query
+          name: filter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Filter'
+      responses:
+        '200':
+          description: Users was found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDtoPage'
+        '400':
+          description: Invalid request
+        '401':
+          description: Not authorised
+        '404':
+          description: Problem not found
+        '405':
+          description: Method is not available
+        '500':
+          description: Server error
+
+  /api/v1/account:
+    post:
+      operationId: createAccount
+      summary: Create Account
+      tags:
+        - Account
+      requestBody:
+        description: Account DTO
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountDto'
+        required: true
+      responses:
+        '201':
+          description: Created account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDto'
+        '400':
+          description: Invalid request
+        '404':
+          description: Resource not found
+        '405':
+          description: Method is not available
+        '500':
+          description: Server error
+
+    patch:
+      operationId: UpdatePasswordForAccount
+      summary: Update password for Account
+      tags:
+        - Account
+      requestBody:
+        description: Account DTO
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountDto'
+        required: true
+      responses:
+        '201':
+          description: Created account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDto'
+        '400':
+          description: Invalid request
+        '404':
+          description: Resource not found
+        '405':
+          description: Method is not available
+        '500':
+          description: Server error
+
+    get:
+      operationId: getAllAccountByCriteria
+      summary: Get All Account By Criteria
+      tags:
+        - Account
+      parameters:
+        - in: query
+          name: pageable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pageable'
+        - in: query
+          name: filter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Filter'
+      responses:
+        '200':
+          description: Users was found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDtoPage'
+        '400':
+          description: Invalid request
+        '401':
+          description: Not authorised
+        '404':
+          description: Problem not found
+        '405':
+          description: Method is not available
+        '500':
+          description: Server error
+
+components:
+  schemas:
+
+    UserDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: User id
+        name:
+          type: string
+          description: User name
+          maxLength: 10
+        birthDate:
+          type: string
+          format: date-time
+          description: User birthday
+
+    UserDtoPage:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserDto'
+        totalElements:
+          type: number
+        totalPages:
+          type: number
+        last:
+          type: boolean
+        numberOfElements:
+          type: number
+        first:
+          type: boolean
+        empty:
+          type: boolean
+
+    AccountDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Account id
+        user_id:
+          type: integer
+          format: int64
+          description: User id
+        balance:
+          type: number
+          format: double
+          description: User balance
+        createdAt:
+          type: string
+          format: date-time
+
+    AccountDtoPage:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccountDto'
+        totalElements:
+          type: number
+        totalPages:
+          type: number
+        last:
+          type: boolean
+        numberOfElements:
+          type: number
+        first:
+          type: boolean
+        empty:
+          type: boolean
+
+    Pageable:
+      type: object
+      properties:
+        page:
+          type: integer
+        size:
+          type: integer
+
+    Filter:
+      type: object
+      properties:
+        direction:
+          type: string
+        isActive:
+          type: boolean

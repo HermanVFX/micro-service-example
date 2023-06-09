@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: /09062023-1/create-usr-table.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: /09062023-2/create-account-table.yaml
+      relativeToChangelogFile: true
