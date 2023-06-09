@@ -1,0 +1,4 @@
+rootProject.name = 'micro-service-example'
+include 'main-service-api'
+include 'main-service-app'
+include 'provider-service'

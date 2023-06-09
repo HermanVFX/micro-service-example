@@ -1,0 +1,46 @@
+services:
+  # DataBase
+  # - PostgreSQL database
+  postgres-db:
+    image: postgres:15.1
+    container_name: postgres-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: postgres
+    volumes:
+      - ./postgres/create_db.sql:/docker-entrypoint-initdb.d/create_db.sql
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+  # Services
+  # Main-service
+  main-service-api:
+    build: ./main-service-api
+    container_name: main-service-api
+    ports:
+      - "8080:8080"
+
+  main-service-app:
+    build: ./main-service-app
+    container_name: main-service-app
+    ports:
+      - "8081:8081"
+
+  # Provider-service
+  provider-service:
+    build: ./provider-service
+    container_name: provider-service
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      DB_URL: jdbc:postgresql://postgres-db:5432/postgres?currentSchema=provider
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+    ports:
+      - "8082:8082"
+    depends_on:
+      - postgres-db
+
+volumes:
+  pgdata:
